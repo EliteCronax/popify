@@ -52,10 +52,8 @@
         <h1>Popify</h1>
         <nav>
             <select id="timeRange">
-                <option value="day">Today</option>
-                <option value="week">This Week</option>
-                <option value="month">This Month</option>
-                <option value="year">This Year</option>
+                <option value="country">Country</option>
+                <option value="global">Global</option>
             </select>
         </nav>
     </header>
@@ -69,36 +67,35 @@
         const popularSongsTitle = document.getElementById('popularSongsTitle');
         const songList = document.getElementById('songList');
 
-        // Mock data for popular songs
-        const popularSongs = {
-            day: [
-                "Song 1 - Artist A",
-                "Song 2 - Artist B",
-                "Song 3 - Artist C",
-            ],
-            week: [
-                "Weekly Hit 1 - Artist D",
-                "Weekly Hit 2 - Artist E",
-                "Weekly Hit 3 - Artist F",
-            ],
-            month: [
-                "Monthly Favorite 1 - Artist G",
-                "Monthly Favorite 2 - Artist H",
-                "Monthly Favorite 3 - Artist I",
-            ],
-            year: [
-                "Year's Best 1 - Artist J",
-                "Year's Best 2 - Artist K",
-                "Year's Best 3 - Artist L",
-            ]
-        };
+        const apiKey = '8d25d819d6mshe383c653dccdbbcp1adcb9jsn08033f03d917';
 
-        function updateSongList(range) {
-            const songs = popularSongs[range];
+        async function fetchPopularSongs(listId) {
+            const url = `https://shazam.p.rapidapi.com/charts/track?locale=en-US&listId=${listId}&pageSize=10&startFrom=0`;
+            const options = {
+                method: 'GET',
+                headers: {
+                    'X-RapidAPI-Key': apiKey,
+                    'X-RapidAPI-Host': 'shazam.p.rapidapi.com'
+                }
+            };
+
+            try {
+                const response = await fetch(url, options);
+                const result = await response.json();
+                return result.tracks;
+            } catch (error) {
+                console.error('Error fetching popular songs:', error);
+                return [];
+            }
+        }
+
+        async function updateSongList(range) {
+            const listId = range === 'country' ? 'ip-country-chart-US' : 'world-chart-world';
+            const songs = await fetchPopularSongs(listId);
             songList.innerHTML = '';
             songs.forEach(song => {
                 const li = document.createElement('li');
-                li.textContent = song;
+                li.textContent = `${song.title} - ${song.subtitle}`;
                 songList.appendChild(li);
             });
         }
@@ -110,7 +107,7 @@
         });
 
         // Initial load
-        updateSongList('day');
+        updateSongList('country');
     </script>
 </body>
 </html>
