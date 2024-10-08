@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Popify - Popular Songs</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #121212;
+            color: #ffffff;
+        }
+
+        header {
+            background-color: #1DB954;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        h1 {
+            margin: 0;
+        }
+
+        nav select {
+            padding: 5px;
+            font-size: 16px;
+        }
+
+        main {
+            padding: 20px;
+        }
+
+        #songList {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        #songList li {
+            background-color: #282828;
+            margin-bottom: 10px;
+            padding: 15px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Popify</h1>
+        <nav>
+            <select id="timeRange">
+                <option value="day">Today</option>
+                <option value="week">This Week</option>
+                <option value="month">This Month</option>
+                <option value="year">This Year</option>
+            </select>
+        </nav>
+    </header>
+    <main>
+        <h2 id="popularSongsTitle">Popular Songs</h2>
+        <ul id="songList"></ul>
+    </main>
+
+    <script>
+        const timeRange = document.getElementById('timeRange');
+        const popularSongsTitle = document.getElementById('popularSongsTitle');
+        const songList = document.getElementById('songList');
+
+        // Mock data for popular songs
+        const popularSongs = {
+            day: [
+                "Song 1 - Artist A",
+                "Song 2 - Artist B",
+                "Song 3 - Artist C",
+            ],
+            week: [
+                "Weekly Hit 1 - Artist D",
+                "Weekly Hit 2 - Artist E",
+                "Weekly Hit 3 - Artist F",
+            ],
+            month: [
+                "Monthly Favorite 1 - Artist G",
+                "Monthly Favorite 2 - Artist H",
+                "Monthly Favorite 3 - Artist I",
+            ],
+            year: [
+                "Year's Best 1 - Artist J",
+                "Year's Best 2 - Artist K",
+                "Year's Best 3 - Artist L",
+            ]
+        };
+
+        function updateSongList(range) {
+            const songs = popularSongs[range];
+            songList.innerHTML = '';
+            songs.forEach(song => {
+                const li = document.createElement('li');
+                li.textContent = song;
+                songList.appendChild(li);
+            });
+        }
+
+        timeRange.addEventListener('change', (e) => {
+            const selectedRange = e.target.value;
+            popularSongsTitle.textContent = `Popular Songs - ${selectedRange.charAt(0).toUpperCase() + selectedRange.slice(1)}`;
+            updateSongList(selectedRange);
+        });
+
+        // Initial load
+        updateSongList('day');
+    </script>
+</body>
+</html>
